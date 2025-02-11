@@ -14,6 +14,9 @@ public class PlayerController2 : MonoBehaviour
 
     private float moveInput = 0f;
 
+    private bool hasWeapon = false; // Track if the player has the weapon
+    private GameObject weaponObject = null; // Reference to the weapon object when in range
+
     private void Awake()
     {
         controls = new PlayerControls2();
@@ -89,12 +92,30 @@ public class PlayerController2 : MonoBehaviour
 
     private void Attack()
     {
-        Debug.Log("Attack with B!");
+        if (hasWeapon)
+        {
+            Debug.Log("Attack with weapon!");
+            // Add attack logic here (e.g., deal damage to enemies)
+        }
+        else
+        {
+            Debug.Log("Tried to attack but no weapon equipped.");
+        }
     }
 
     private void PickUp()
     {
-        Debug.Log("Pick up item with Y!");
+        if (weaponObject != null)
+        {
+            hasWeapon = true; // Mark the player as having picked up a weapon
+            Debug.Log("Picked up a weapon!");
+            Destroy(weaponObject); // Destroy the weapon object after being picked up
+            weaponObject = null; // Clear the reference
+        }
+        else
+        {
+            Debug.Log("No weapon nearby to pick up.");
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -103,13 +124,19 @@ public class PlayerController2 : MonoBehaviour
         {
             isGrounded = true;
         }
+        else if (collision.gameObject.CompareTag("Weapon"))
+        {
+            // Set the weapon object when in range
+            weaponObject = collision.gameObject;
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag("Weapon"))
         {
-            isGrounded = false;
+            // Clear the weapon object reference when leaving the collision zone
+            weaponObject = null;
         }
     }
 }
