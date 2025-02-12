@@ -38,6 +38,11 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("Scenes/Level 2");
         Time.timeScale = 1;
     }
+    public void LoadSceneLevelSelect()
+    {
+        SceneManager.LoadScene("Scenes/Level Select");
+        Time.timeScale = 1;
+    }
     public void Quitgame()
     {
         Application.Quit();
