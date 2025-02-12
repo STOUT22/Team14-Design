@@ -5,6 +5,7 @@ public class PlayerController : MonoBehaviour
 {
     private PlayerControls controls;
     private Rigidbody2D rb;
+    private PlayerAudio playerAudio; // Reference to PlayerAudio
 
     public float moveSpeed = 5f;
     public float moveForce = 50f; // More force for movement
@@ -25,6 +26,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        playerAudio = GetComponent<PlayerAudio>(); // Get reference to PlayerAudio component
     }
 
     private void OnEnable()
@@ -32,11 +34,11 @@ public class PlayerController : MonoBehaviour
         controls.Player1.Enable();
 
         // D-Pad Left
-        controls.Player1.MoveLeft.performed += ctx => moveInput = -1f;
+        controls.Player1.MoveLeft.performed += ctx => { moveInput = -1f; playerAudio.movementSource.Play(); };
         controls.Player1.MoveLeft.canceled += ctx => ResetMoveInput();
 
         // D-Pad Right
-        controls.Player1.MoveRight.performed += ctx => moveInput = 1f;
+        controls.Player1.MoveRight.performed += ctx => { moveInput = 1f; playerAudio.movementSource.Play(); };
         controls.Player1.MoveRight.canceled += ctx => ResetMoveInput();
 
         // Jump
@@ -57,7 +59,6 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         Debug.Log($"Move Input: {moveInput} | Rigidbody Velocity: {rb.velocity}");
-
         MovePlayer();
     }
 
@@ -65,10 +66,7 @@ public class PlayerController : MonoBehaviour
     {
         if (moveInput != 0)
         {
-            // Apply force for movement instead of setting velocity directly
             rb.AddForce(new Vector2(moveInput * moveForce, 0), ForceMode2D.Force);
-
-            // Cap speed to prevent excessive acceleration
             if (Mathf.Abs(rb.velocity.x) > maxSpeed)
             {
                 rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * maxSpeed, rb.velocity.y);
@@ -79,6 +77,7 @@ public class PlayerController : MonoBehaviour
     private void ResetMoveInput()
     {
         moveInput = 0f;
+        playerAudio.movementSource.Stop();
     }
 
     private void Jump()
@@ -87,6 +86,7 @@ public class PlayerController : MonoBehaviour
         {
             rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
             isGrounded = false;
+            playerAudio.PlayJumpSound();
         }
     }
 
@@ -95,7 +95,7 @@ public class PlayerController : MonoBehaviour
         if (hasWeapon)
         {
             Debug.Log("Attack with weapon!");
-            // Add attack logic here (e.g., deal damage to enemies)
+            playerAudio.PlayAttackSound();
         }
         else
         {
@@ -107,10 +107,11 @@ public class PlayerController : MonoBehaviour
     {
         if (weaponObject != null)
         {
-            hasWeapon = true; // Mark the player as having picked up a weapon
+            hasWeapon = true;
             Debug.Log("Picked up a weapon!");
-            Destroy(weaponObject); // Destroy the weapon object after being picked up
-            weaponObject = null; // Clear the reference
+            playerAudio.PlayPickItemSound();
+            Destroy(weaponObject);
+            weaponObject = null;
         }
         else
         {
@@ -126,7 +127,6 @@ public class PlayerController : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Weapon"))
         {
-            // Set the weapon object when in range
             weaponObject = collision.gameObject;
         }
     }
@@ -135,7 +135,6 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Weapon"))
         {
-            // Clear the weapon object reference when leaving the collision zone
             weaponObject = null;
         }
     }

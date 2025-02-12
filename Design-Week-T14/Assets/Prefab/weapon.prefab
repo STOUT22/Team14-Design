@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 8259007758771412029}
   - component: {fileID: 7429676391056583800}
   - component: {fileID: -5236093335734700079}
-  m_Layer: 0
+  - component: {fileID: -8421622842687105391}
+  m_Layer: 6
   m_Name: weapon
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -115,7 +116,7 @@ PolygonCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -157,7 +158,24 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
+--- !u!114 &-8421622842687105391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4766380877015732037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13551d11c0015874eb241a4217136e20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pickUpKey: q
+  pickupRange: 3
+  ItemLayer:
+    serializedVersion: 2
+    m_Bits: 0
