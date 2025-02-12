@@ -1,5 +1,5 @@
 using UnityEngine;
-using TMPro;  // Import the TextMeshPro namespace
+using TMPro;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -44,7 +44,17 @@ public class GameController : MonoBehaviour
     {
         // You can include any other game logic here for managing player health, etc.
     }
-
+    public void OnPlayerDeath(string playerTag)
+    {
+        if (playerTag == "Player1")
+        {
+            AddPlayer2Score(1); // Player 2 gets 1 point when Player 1 dies
+        }
+        else if (playerTag == "Player2")
+        {
+            AddPlayer1Score(1); // Player 1 gets 1 point when Player 2 dies
+        }
+    }
     private IEnumerator TimerCountdown()
     {
         while (currentTime > 0)
@@ -60,9 +70,19 @@ public class GameController : MonoBehaviour
             extraTimeAdded = true;
             currentTime = extraTime;
             UpdateTimerText();
+
+            // Once extra time starts, change kill point value to 3
+            StartCoroutine(ChangeKillPointsToThree());
         }
     }
+    private IEnumerator ChangeKillPointsToThree()
+    {
+        yield return new WaitForSeconds(0f);  // Ensure we start right after the countdown
 
+        // Change the point system for killing to 3 points after extra time
+        AddPlayer1Score(3);  // Player 1 now gets 3 points for kills
+        AddPlayer2Score(3);  // Player 2 now gets 3 points for kills
+    }
     private void UpdateTimerText()
     {
         int minutes = Mathf.FloorToInt(currentTime / 60f);
@@ -70,37 +90,16 @@ public class GameController : MonoBehaviour
         timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
-    // Player 1 Health Management
-    public void UpdatePlayer1Health(int healthChange)
+    // Update health of the player
+    public void UpdatePlayerHealth(string playerTag, int health)
     {
-        player1HealthBar.value += healthChange;
-
-        // Ensure health doesn't go below 0 or above max
-        if (player1HealthBar.value <= 0)
+        if (playerTag == "Player1")
         {
-            player1HealthBar.value = 0;
-            // Trigger Player 1 game over logic here
+            player1HealthBar.value = health;
         }
-        else if (player1HealthBar.value >= player1HealthBar.maxValue)
+        else if (playerTag == "Player2")
         {
-            player1HealthBar.value = player1HealthBar.maxValue;
-        }
-    }
-
-    // Player 2 Health Management
-    public void UpdatePlayer2Health(int healthChange)
-    {
-        player2HealthBar.value += healthChange;
-
-        // Ensure health doesn't go below 0 or above max
-        if (player2HealthBar.value <= 0)
-        {
-            player2HealthBar.value = 0;
-            // Trigger Player 2 game over logic here
-        }
-        else if (player2HealthBar.value >= player2HealthBar.maxValue)
-        {
-            player2HealthBar.value = player2HealthBar.maxValue;
+            player2HealthBar.value = health;
         }
     }
 

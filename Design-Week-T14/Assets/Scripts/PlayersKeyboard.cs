@@ -4,31 +4,46 @@ public class Player : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float jumpForce = 7f;
-    public float gravityScale = 2f; // Gravity multiplier
+    public float gravityScale = 2f;
 
-    private Rigidbody2D rb;
+    public Rigidbody2D rb { get; private set; }
     private Vector2 movement;
     private bool isGrounded;
-    private bool hasWeapon; // Track if the player has a weapon
-    private GameObject weaponObject; // Reference to the weapon object when in range
-    private ItemSpawner itemSpawner; // Reference to ItemSpawner to notify item usage
+    private bool hasWeapon;
+    private GameObject weaponObject;
+    private ItemSpawner itemSpawner;
+    private PlayerAudio playerAudio;
+
+    private int currentHealth;
+    public int maxHealth = 100;
+
+    private bool isDead = false;
+    private GameController gameController;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        rb.gravityScale = gravityScale; // Apply gravity scale
-        hasWeapon = false; // Initially, the player doesn't have the weapon
-        weaponObject = null; // No weapon in range initially
-        itemSpawner = FindObjectOfType<ItemSpawner>(); // Find the ItemSpawner in the scene
+        rb.gravityScale = gravityScale;
+        hasWeapon = false;
+        weaponObject = null;
+        itemSpawner = FindObjectOfType<ItemSpawner>();
+        playerAudio = GetComponent<PlayerAudio>();
+        gameController = FindObjectOfType<GameController>();
+
+        currentHealth = maxHealth;
     }
 
     void Update()
     {
+        if (isDead) return;  // Skip logic if player is dead
+
         HandleInput();
     }
 
     void FixedUpdate()
     {
+        if (isDead) return;  // Skip movement if player is dead
+
         Move();
     }
 
@@ -41,7 +56,7 @@ public class Player : MonoBehaviour
             if (Input.GetKey(KeyCode.A)) movement.x = -1;
             if (Input.GetKeyDown(KeyCode.W) && isGrounded) Jump();
             if (Input.GetKeyDown(KeyCode.E)) Attack();
-            if (Input.GetKeyDown(KeyCode.Q)) PickItem(); // Pick up item when Q is pressed
+            if (Input.GetKeyDown(KeyCode.Q)) PickItem();
         }
         else if (CompareTag("Player2"))
         {
@@ -49,7 +64,7 @@ public class Player : MonoBehaviour
             if (Input.GetKey(KeyCode.LeftArrow)) movement.x = -1;
             if (Input.GetKeyDown(KeyCode.UpArrow) && isGrounded) Jump();
             if (Input.GetKeyDown(KeyCode.RightShift)) Attack();
-            if (Input.GetKeyDown(KeyCode.RightControl)) PickItem(); // Pick up item when Right Ctrl is pressed
+            if (Input.GetKeyDown(KeyCode.RightControl)) PickItem();
         }
     }
 
@@ -62,6 +77,7 @@ public class Player : MonoBehaviour
     {
         rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         isGrounded = false;
+        playerAudio.PlayJumpSound();
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -72,7 +88,6 @@ public class Player : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Weapon"))
         {
-            // Set the weapon object when in range
             weaponObject = collision.gameObject;
         }
     }
@@ -81,7 +96,6 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Weapon"))
         {
-            // Clear the weapon object reference when leaving the collision zone
             weaponObject = null;
         }
     }
@@ -91,8 +105,8 @@ public class Player : MonoBehaviour
         if (hasWeapon)
         {
             Debug.Log(gameObject.tag + " attacked with weapon!");
-            // Add attack logic here
-            UseItem(); // Item gets used
+            playerAudio.PlayAttackSound();
+            UseItem();
         }
         else
         {
@@ -104,9 +118,10 @@ public class Player : MonoBehaviour
     {
         if (weaponObject != null)
         {
-            hasWeapon = true; // Mark the player as having picked up a weapon
+            hasWeapon = true;
             Debug.Log(gameObject.tag + " picked up a weapon!");
-            UseItem(); // Item gets used
+            playerAudio.PlayPickItemSound();
+            UseItem();
         }
         else
         {
@@ -118,10 +133,49 @@ public class Player : MonoBehaviour
     {
         if (weaponObject != null)
         {
-            // Notify the ItemSpawner that the item has been used and destroy it
             itemSpawner.ItemUsed(weaponObject);
-            weaponObject = null; // Clear the reference after use
-            hasWeapon = false; // Reset weapon status for the player
+            weaponObject = null;
+            hasWeapon = false;
         }
+    }
+
+    // Health management
+    public void TakeDamage(int damage)
+    {
+        if (isDead) return;  // Ignore damage if already dead
+
+        currentHealth -= damage;
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        isDead = true;
+        rb.velocity = Vector2.zero;  // Stop all movement
+        gameController.UpdatePlayerHealth(gameObject.tag, 0);  // Update health bar to 0
+
+        Debug.Log(gameObject.tag + " has died!");
+
+        // Trigger respawn after a delay
+        Invoke("Respawn", 3f);  // Respawn after 3 seconds (you can adjust this)
+
+        // Notify GameController that a player died (so the other player gets +1 point)
+        gameController.OnPlayerDeath(gameObject.tag);
+    }
+
+
+    void Respawn()
+    {
+        // Respawn the player at their starting position
+        transform.position = Vector3.zero;  // Respawn at the origin or wherever you want
+        currentHealth = maxHealth;
+        gameController.UpdatePlayerHealth(gameObject.tag, currentHealth);  // Reset health bar
+
+        isDead = false;  // Allow player to move again
+        Debug.Log(gameObject.tag + " has respawned!");
     }
 }

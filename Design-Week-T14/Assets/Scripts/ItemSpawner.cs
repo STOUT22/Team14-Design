@@ -34,19 +34,20 @@ public class ItemSpawner : MonoBehaviour
 
     private void SpawnItem()
     {
-        // Find all spawn points and randomly select one to spawn an item
-        for (int i = 0; i < spawnPoints.Length; i++)
-        {
-            if (spawnedItems.Count < maxItems)
-            {
-                // Randomly select an item prefab
-                GameObject itemToSpawn = itemPrefabs[Random.Range(0, itemPrefabs.Length)];
+        if (spawnPoints.Length == 0 || itemPrefabs.Length == 0) return;
 
-                // Instantiate the item at the spawn point
-                GameObject spawnedItem = Instantiate(itemToSpawn, spawnPoints[i].position, Quaternion.identity);
-                spawnedItems.Add(spawnedItem); // Add to the list of spawned items
-                Debug.Log(itemToSpawn.name + " spawned at " + spawnPoints[i].position);
-            }
+        List<Transform> availableSpawnPoints = new List<Transform>(spawnPoints);
+
+        while (availableSpawnPoints.Count > 0 && spawnedItems.Count < maxItems)
+        {
+            int index = Random.Range(0, availableSpawnPoints.Count);
+            Transform spawnPoint = availableSpawnPoints[index];
+            availableSpawnPoints.RemoveAt(index); // Prevent reusing the same spot
+
+            GameObject itemToSpawn = itemPrefabs[Random.Range(0, itemPrefabs.Length)];
+            GameObject spawnedItem = Instantiate(itemToSpawn, spawnPoint.position, Quaternion.identity);
+            spawnedItems.Add(spawnedItem);
+            Debug.Log(itemToSpawn.name + " spawned at " + spawnPoint.position);
         }
     }
 
