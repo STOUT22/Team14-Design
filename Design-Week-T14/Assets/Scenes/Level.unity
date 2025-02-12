@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 61736095}
   m_Layer: 0
   m_Name: Wall
-  m_TagString: Ground
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -921,6 +921,7 @@ GameObject:
   - component: {fileID: 672252066}
   - component: {fileID: 672252065}
   - component: {fileID: 672252064}
+  - component: {fileID: 672252068}
   m_Layer: 0
   m_Name: One Way Platform
   m_TagString: Ground
@@ -936,7 +937,7 @@ PlatformEffector2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 672252063}
   m_Enabled: 1
-  m_UseColliderMask: 1
+  m_UseColliderMask: 0
   m_ColliderMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -1059,6 +1060,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 879930374}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &672252068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 672252063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 368b3447780049741979bfa9b6617dce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &879930373
 GameObject:
   m_ObjectHideFlags: 0
@@ -1849,8 +1862,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f1a284c37e4dff347a83693d06cac831, type: 2}
+  m_sharedMaterial: {fileID: -1245380972510539413, guid: f1a284c37e4dff347a83693d06cac831, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2011,6 +2024,7 @@ GameObject:
   - component: {fileID: 1365219572}
   - component: {fileID: 1365219571}
   - component: {fileID: 1365219570}
+  - component: {fileID: 1365219574}
   m_Layer: 0
   m_Name: One Way Platform (1)
   m_TagString: Ground
@@ -2149,6 +2163,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 879930374}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1365219574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1365219569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 368b3447780049741979bfa9b6617dce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1447733525
 GameObject:
   m_ObjectHideFlags: 0
@@ -2540,6 +2566,7 @@ GameObject:
   - component: {fileID: 1634311877}
   - component: {fileID: 1634311876}
   - component: {fileID: 1634311875}
+  - component: {fileID: 1634311879}
   m_Layer: 0
   m_Name: One Way Platform (2)
   m_TagString: Ground
@@ -2678,6 +2705,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 879930374}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1634311879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1634311874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 368b3447780049741979bfa9b6617dce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1726555479
 GameObject:
   m_ObjectHideFlags: 0
@@ -2828,6 +2867,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1040236408}
     m_Modifications:
+    - target: {fileID: 2638485488943075142, guid: d018ac8f8a3990e4da782e77e4e582ed, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
     - target: {fileID: 2827607642367214189, guid: d018ac8f8a3990e4da782e77e4e582ed, type: 3}
       propertyPath: m_LocalPosition.x
       value: 10.333754
@@ -3114,6 +3157,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1040236408}
     m_Modifications:
+    - target: {fileID: 2638485488943075142, guid: d018ac8f8a3990e4da782e77e4e582ed, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
     - target: {fileID: 2827607642367214189, guid: d018ac8f8a3990e4da782e77e4e582ed, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.0437536
