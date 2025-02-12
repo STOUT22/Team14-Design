@@ -24,10 +24,6 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("Scenes/LowFidelityPrototype");
         Time.timeScale = 1;
     }
-    public void LoadSceneHowToPlay()
-    {
-        SceneManager.LoadScene("Scenes/HowToPlay");
-    }
     public void LoadSceneHomeScreen()
     {
         SceneManager.LoadScene("Scenes/HomeScreen");
@@ -53,11 +49,6 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             LoadSceneLowFidPrototype();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            LoadSceneHowToPlay();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
